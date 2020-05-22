@@ -202,7 +202,7 @@ int main (){
 												}
 											}
 											mensaje = newmensaje;
-											
+											delete [] arreglo;
 										}
 									
 									personas[opcion].getMensajes().push_back(mensaje);
@@ -238,11 +238,12 @@ int main (){
 												}
 											}
 											mensaje = newmensaje;
-											
+											delete [] arreglo;
 										}
 									
 									personas[opcion].getMensajes().push_back((char)u + mensaje);
 									cout << endl << "Mensaje enviado exitosamente !" << endl;
+									
 								}
 								
 								break;
@@ -307,7 +308,7 @@ int main (){
 												}
 											}
 											mensaje = newmensaje;
-											
+											delete [] arreglo;
 										}
 									
 									personas[opcion].getMensajes().push_back(mensaje);
@@ -343,6 +344,7 @@ int main (){
 												}
 											}
 											mensaje = newmensaje;
+											delete [] arreglo;
 											
 										}
 									
