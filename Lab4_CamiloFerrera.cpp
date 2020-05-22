@@ -25,7 +25,8 @@ Persona::Persona(string _nombre, string _apellido, string _password){
 	nombre = _nombre;
 	apellido = _apellido;
 	password = _password;
-	llave = 3;
+	srand ((int) time (0));
+	llave = rand() % 15;
 }
 
 vector <Persona> personas;
