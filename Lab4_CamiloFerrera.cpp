@@ -25,8 +25,7 @@ Persona::Persona(string _nombre, string _apellido, string _password){
 	nombre = _nombre;
 	apellido = _apellido;
 	password = _password;
-	srand((int)time(0));
-	llave = rand () % 15;
+	llave = 3;
 }
 
 vector <Persona> personas;
@@ -102,6 +101,7 @@ string CesarAtras (string palabra, int numero){
 
 int MenuUsuario(){
 	int opcion;
+	cout << "Hola " << personas[u].getNombre()<< "!" << endl << endl;
 	cout << "1. Enviar mensaje" << endl;
 	cout << "2. Ver mensajes" << endl;
 	cout << "3. Ver mi llave" << endl;
@@ -142,6 +142,7 @@ int main (){
 				
 				bool login = LogIn(nombre,password);
 				if (login == true){
+
 					while (login){
 						opcion = MenuUsuario();
 						while (opcion > 4 || opcion < 1){
@@ -151,29 +152,99 @@ int main (){
 						
 						switch (opcion) {
 							case 1: {
-								if (personas.size() == 1){
-									cout << "Solamente tu estas registraso :( no hay a quien enviar mensajes..." << endl;
-								} else {
-									for (int i = 0; i < personas.size(); i++){
-										cout << (i+1) << ". " << personas[i].getNombre() << endl;
-									}
-									cout << "Selecciona a quien enviar el mensaje: "; cin >> opcion;cout << endl;
-									string mensaje;
-									cout << "Escribe el mensaje: "; cin >> mensaje;
-									
-									if (mensaje.size() % personas[opcion].getLlave() == 0){
-										string *arreglo;
-										arreglo = new string [personas[opcion].getLlave()];
-										for (int i = 0; i < personas[opcion].getLlave(); i++){
-											for (int j = 0; j < mensaje.size(); j++){
-												arreglo[i] += mensaje[i];
-											}
-										}
-										
-									} else {
-										
-									}
+								for (int i = 0; i < personas.size(); i++){
+									cout << (i+1) << ". " << personas[i].getNombre() << endl;
 								}
+								cout << "Selecciona a quien enviar el mensaje: "; cin >> opcion;
+								opcion -= 1;
+								
+								while (opcion < 0 || opcion >= personas.size()){
+									cout << endl << "Opcion Incorrecta" << endl;
+									cout << "Selecciona a quien enviar el mensaje: "; cin >> opcion;
+									opcion -=1;
+									
+								}
+								cout << endl;
+								
+								string mensaje;
+								cout << "Escribe el mensaje: "; cin >> mensaje;
+								
+								
+								if (mensaje.size()/personas[u].getLlave() == 0){
+									string newmensaje;
+										for (int x = personas[u].getLlave(); x > 0 ; x--){
+											string *arreglo = NULL;
+											arreglo = new string [mensaje.size()/x];
+											
+											int contador = 0;											
+		
+											for (int i = 0; i < mensaje.size()/x; i++){
+												for (int j = 0; j < x; j++){
+													arreglo[i] += mensaje[contador];
+													contador ++; 
+												}
+											}
+											
+											for (int i = 0; i < mensaje.size()/x; i++){
+												if (i % 2 == 0){
+													arreglo[i] = CesarAdelante(arreglo[i],x);
+												} else {
+													arreglo[i] = CesarAtras(arreglo[i],x);
+												}
+											}
+											
+											
+											
+											newmensaje = "";
+											for (int i = 0;i < mensaje.size()/x; i++){
+												for (int j = 0; j < x; j++){
+													newmensaje += arreglo[i][j];
+												}
+											}
+											mensaje = newmensaje;
+											
+										}
+									
+									personas[opcion].getMensajes().push_back(mensaje);
+								} else {
+										string newmensaje;
+										for (int x = personas[u].getLlave(); x > 0 ; x--){
+											string *arreglo = NULL;
+											arreglo = new string [mensaje.size()/x+1];
+											
+											int contador = 0;												
+											
+											for (int i = 0; i < mensaje.size()/x+1; i++){
+												for (int j = 0; j < x; j++){
+													arreglo[i] += mensaje[contador];
+													contador ++; 
+												}
+											}
+											
+											for (int i = 0; i < mensaje.size()/x+1; i++){
+												if (i % 2 == 0){
+													arreglo[i] = CesarAdelante(arreglo[i],x);
+												} else {
+													arreglo[i] = CesarAtras(arreglo[i],x);
+												}
+											}
+											
+											
+											
+											newmensaje = "";
+											for (int i = 0;i < mensaje.size()/x+1; i++){
+												for (int j = 0; j < x; j++){
+													newmensaje += arreglo[i][j];
+												}
+											}
+											mensaje = newmensaje;
+											
+										}
+									
+									personas[opcion].getMensajes().push_back((char)u + mensaje);
+									cout << endl << "Mensaje enviado exitosamente !" << endl;
+								}
+								
 								break;
 							}
 							case 2: {
@@ -182,8 +253,101 @@ int main (){
 								} else {
 									cout << "Mensajes recibidos:" << endl << endl;
 									for (int i = 0; i < personas[u].getMensajes().size(); i++){
-										cout << personas[u].getMensajes()[i] << endl; 
+										int apoyo = (char)personas[u].getMensajes()[i][0];
+										string newmensaje = "";
+										for (int j = 1; j < personas[u].getMensajes()[i].size(); j++ ){
+											newmensaje += personas[u].getMensajes()[i][j];
+										}
+										
+										
+										personas[u].getMensajes()[i] = newmensaje;
+										cout << (i+1) << ". " << "Enviado por: " << personas[apoyo].getNombre() << " " <<  personas[u].getMensajes()[i] << endl; 
+										
 									}
+									cout << "Escoga el mensaje: "; cin >> opcion; cout << endl;
+									opcion -= 1;
+									
+									while (opcion < 0 || opcion >= personas[u].getMensajes().size()){
+										cout << endl << "Opcion Incorrecta" << endl;
+										cout << "Escoga un mensaje valido: "; cin >> opcion;
+										opcion -=1;
+									
+									}
+									
+									string mensaje = personas[u].getMensajes()[opcion];
+									if (mensaje.size()/personas[u].getLlave() == 0){
+									string newmensaje;
+										for (int x = personas[u].getLlave(); x > 0 ; x--){
+											string *arreglo = NULL;
+											arreglo = new string [mensaje.size()/x];
+											
+											int contador = 0;											
+		
+											for (int i = 0; i < mensaje.size()/x; i++){
+												for (int j = 0; j < x; j++){
+													arreglo[i] += mensaje[contador];
+													contador ++; 
+												}
+											}
+											
+											for (int i = 0; i < mensaje.size()/x; i++){
+												if (i % 2 == 0){
+													arreglo[i] = CesarAtras(arreglo[i],x);
+												} else {
+													arreglo[i] = CesarAdelante(arreglo[i],x);
+												}
+											}
+											
+											
+											
+											newmensaje = "";
+											for (int i = 0;i < mensaje.size()/x; i++){
+												for (int j = 0; j < x; j++){
+													newmensaje += arreglo[i][j];
+												}
+											}
+											mensaje = newmensaje;
+											
+										}
+									
+									personas[opcion].getMensajes().push_back(mensaje);
+								} else {
+										string newmensaje;
+										for (int x = personas[u].getLlave(); x > 0 ; x--){
+											string *arreglo = NULL;
+											arreglo = new string [mensaje.size()/x+1];
+											
+											int contador = 0;											
+		
+											for (int i = 0; i < mensaje.size()/x+1; i++){
+												for (int j = 0; j < x; j++){
+													arreglo[i] += mensaje[contador];
+													contador ++; 
+												}
+											}
+											
+											for (int i = 0; i < mensaje.size()/x+1; i++){
+												if (i % 2 == 0){
+													arreglo[i] = CesarAtras(arreglo[i],x);
+												} else {
+													arreglo[i] = CesarAdelante(arreglo[i],x);
+												}
+											}
+											
+											
+											
+											newmensaje = "";
+											for (int i = 0;i < mensaje.size()/x+1; i++){
+												for (int j = 0; j < x; j++){
+													newmensaje += arreglo[i][j];
+												}
+											}
+											mensaje = newmensaje;
+											
+										}
+									
+									cout << "El mensaje es: " << mensaje << endl;
+								}
 								}
 								break;
 							}
@@ -202,7 +366,7 @@ int main (){
 						
 					
 				} else {
-					cout << "Datos Incorrectos...";
+					cout << "Datos Incorrectos..." << endl;
 				}
 				
 				break;
@@ -217,6 +381,6 @@ int main (){
 			}
 		}
 		
-		cout << endl;
+		cout <<  endl;
 	}
 }
