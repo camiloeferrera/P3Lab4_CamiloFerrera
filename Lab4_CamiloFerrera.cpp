@@ -206,7 +206,7 @@ int main (){
 											delete [] arreglo;
 										}
 									
-									personas[opcion].getMensajes().push_back(mensaje);
+									personas[opcion].getMensajes().push_back((char)u + mensaje);
 								} else {
 										string newmensaje;
 										for (int x = personas[u].getLlave(); x > 0 ; x--){
