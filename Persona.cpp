@@ -10,9 +10,12 @@ Persona::Persona(string _nombre, string _apellido, string _password){
 }
 
 Persona::~Persona(){
+	for (int i = 0; i < this->mensajes.size(); i++){
+		delete this->mensajes[i];
+	}
 }
 
-vector <Mensaje>& Persona::getMensajes(){
+vector <Mensaje*>& Persona::getMensajes(){
     return mensajes;
 }
 string Persona::getNombre(){

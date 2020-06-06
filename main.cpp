@@ -7,7 +7,7 @@
 
 using namespace std;
 
-vector <Persona> personas;
+vector <Persona*> personas;
 int u; //variable que nos ayudara a manejar al usuario que inicio sesion.
 
 
@@ -40,7 +40,7 @@ int main (){
 				if (registrado == true){
 					cout << "Esta persona ya esta registrada..." << endl;
 				} else {
-					personas.push_back(Persona (nombre,apellido,password));
+					personas.push_back(new Persona (nombre,apellido,password));
 					cout << "Se ha registrado exitosamente!" << endl;
 				}
 				break;
@@ -63,7 +63,7 @@ int main (){
 						switch (opcion) {
 							case 1: {
 								for (int i = 0; i < personas.size(); i++){
-									cout << (i+1) << ". " << personas[i].getNombre() << endl;
+									cout << (i+1) << ". " << personas[i]->getNombre() << endl;
 								}
 								cout << "Selecciona a quien enviar el mensaje: "; cin >> opcion;
 								opcion -= 1;
@@ -79,7 +79,7 @@ int main (){
 								string mensaje;
 								cout << "Escribe el mensaje: "; cin >> mensaje;
 								
-								personas[opcion].getMensajes().push_back(Mensaje(Cifrado(mensaje,personas[u].getLlave()), personas[u].getLlave()));
+								personas[opcion]->getMensajes().push_back(new Mensaje(Cifrado(mensaje,personas[u]->getLlave()), personas[u]->getLlave(),personas[u]->getNombre()));
 								
 								
 								cout << endl << "Mensaje enviado con exito!" << endl;
@@ -87,29 +87,30 @@ int main (){
 								break;
 							}
 							case 2: {
-								if (personas[u].getMensajes().size() == 0){
+								if (personas[u]->getMensajes().size() == 0){
 									cout << "No tienes mensajes recibidos..." << endl;
 								} else {
-									
-									for (int i = 0; i < personas[u].getMensajes().size(); i++){
-										cout << (i+1) << ". " << personas[u].getMensajes()[i].getMensaje() << endl; 
+
+									for (int i = 0; i < personas[u]->getMensajes().size(); i++){
+										cout << (i+1) << ". " << personas[u]->getMensajes()[i]->getMensaje() << endl; 
 									}
 									cout << "Ingrese mensaje a descifrar: "; cin >> opcion; opcion--;
 									
-									while (opcion < 0 || opcion >= personas[u].getMensajes().size()){
+									while (opcion < 0 || opcion >= personas[u]->getMensajes().size()){
 										cout << endl << "Fuera del rango, intente de nuevo." << endl
 										<< "Ingrese mensaje a descifrar: "; cin >> opcion; opcion--;
 									}
 									
 									
-									cout << endl << "El mensaje dice: " << Descifrado(personas[u].getMensajes()[opcion].getMensaje(), personas[u].getMensajes()[opcion].getLlave()) << endl;
+									cout << endl << "Enviado por: " << personas[u]->getMensajes()[opcion]->getAutor() << endl
+									<<  "El mensaje dice: " << Descifrado(personas[u]->getMensajes()[opcion]->getMensaje(), personas[u]->getMensajes()[opcion]->getLlave()) << endl;
 								
 								}
 								
 								break;
 							}
 							case 3: {
-								cout << "Tu llave es: " << personas[u].getLlave() << endl;
+								cout << "Tu llave es: " << personas[u]->getLlave() << endl;
 								break;
 							}
 							case 4: {
@@ -140,12 +141,17 @@ int main (){
 		
 		cout <<  endl;
 	}
+	
+	for (int i = 0; i < personas.size(); i++){
+		delete personas[i];
+	}
+	
 }
 
 bool Registrado (string nombre){
 	bool registrado = false;
 	for (int i = 0; i < personas.size(); i++){
-		if (nombre == personas[i].getNombre()){
+		if (nombre == personas[i]->getNombre()){
 			registrado = true;
 			break;
 		}
@@ -157,7 +163,7 @@ bool Registrado (string nombre){
 bool LogIn (string nombre, string password){
 	bool login = false;
 	for (int i = 0; i < personas.size(); i++){
-		if (nombre == personas[i].getNombre() && password == personas[i].getPassword()){
+		if (nombre == personas[i]->getNombre() && password == personas[i]->getPassword()){
 			login = true;
 			u = i;
 			break;
@@ -191,7 +197,7 @@ string CesarAtras (string palabra, int numero){
 
 int MenuUsuario(){
 	int opcion;
-	cout << "Hola " << personas[u].getNombre()<< "!" << endl << endl;
+	cout << "Hola " << personas[u]->getNombre()<< "!" << endl << endl;
 	cout << "1. Enviar mensaje" << endl;
 	cout << "2. Ver mensajes" << endl;
 	cout << "3. Ver mi llave" << endl;

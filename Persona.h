@@ -13,11 +13,11 @@ class Persona {
 		string apellido;
 		string password;
 		int llave;
-		vector <Mensaje> mensajes;
+		vector <Mensaje*> mensajes;
 	public:
 		Persona (string,string,string);
 		~Persona();
-		vector<Mensaje>& getMensajes();
+		vector<Mensaje*>& getMensajes();
 		string getNombre();
 		string getApellido();
 		string getPassword();

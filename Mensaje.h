@@ -8,13 +8,14 @@ using std::string;
 class Mensaje
 {
 	public:
-		Mensaje(string,int);
+		Mensaje(string,int,string);
 		~Mensaje();
 		
 		string getMensaje();
 		int getLlave();
+		string getAutor();
 	protected:
-		string mensaje;
+		string mensaje,autor;
 		int llave;
 };
 
